@@ -1,68 +1,32 @@
-word = input("Enter a word: ")
+import parse
+import re
+import unicodedata
 
-# tách chữ theo âm đầu, âm đệm, âm chính, âm cuối
-# âm đầu
-ONSET = [
-    ['ngh'],
-    ['ch','tr','th','ph','kh','nh','gh','ng','gi','qu'],
-    ['b','m','v','t','đ','n','d','r','x','s','l','k','c','g','h','q']
-]
+SYLLABLE = re.compile(r"[^\W\d_]+")
 
-# 
-NUCLEUS = ['iê', 'yê', 'ia', 'ya', 'ươ', 'ưa', 'uô', 'ua', 'oo', 'ôô']
+# Đồ án giữa kì 1
+text = unicodedata.normalize("NFC", "Nếu biết rằng em đã có chồng, trời ơi người ấy có buồn không")
+print(SYLLABLE.sub(lambda m: parse.parse(m.group()), text))
 
-ENDINGS = [
-    ['ng', 'nh', 'ch'],
-    ['m', 'n', 'p', 't', 'c', 'o', 'u', 'i', 'y']
-]
+def parse_from_file(path: str):
+    with open(path) as f:
+        raw, result = '', ''
+        for line in f:
+            raw += line
+            line = line.rstrip("\n")
+            result += SYLLABLE.sub(lambda m: parse.parse(m.group()), line) + "\n"
+        print(raw)
+        print("--------------")
+        print(result)
 
-onset = ''
-medial = ''
-nucleus = ''
-coda = ''
-
-for i in ONSET:
-    for j in i:
-        if word.startswith(j):
-            onset = j
-            word = word[len(j):]
-            break
-    if onset != '':
-        break
-
-for i in ENDINGS:
-    for j in i:
-        if word.endswith(j):
-            coda = j
-            word = word[:-len(j)]
-            break
-    if coda != '':
-        break
-
-if len(word) == 1:
-    nucleus = word
-else:
-    for i in NUCLEUS:
-        if word.endswith(i):
-            nucleus = i
-            word = word[:-len(i)]
-            break
-        if nucleus != '':
-            break
-    
-
-    # if nucleus is not found, then it is a single character
-    if nucleus == '':
-        nucleus = word[-1]
-        word = word[:-1]
-    
-    if word != '':
-        medial = word
-
-print('onset:', onset)
-print('medial:', medial)
-print('nucleus:', nucleus)
-print('coda:', coda)
-
-# 1. fix âm cuối có thể không có
-# 2. fix tách dấu
+print("Bài tập phiên âm #1:")
+parse_from_file("input/bai_1.txt")
+print("==========")
+print("Bài tập phiên âm #2:")
+parse_from_file("input/bai_2.txt")
+print("==========")
+print("Bài tập phiên âm #3:")
+parse_from_file("input/bai_3.txt")
+print("==========")
+print("Bài tập phiên âm #4:")
+parse_from_file("input/bai_4.txt")
