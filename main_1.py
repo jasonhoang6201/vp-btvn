@@ -19,6 +19,8 @@ def parse_from_file(path: str):
         print("--------------")
         print(result)
 
+print("Đồ án giữa kì 1:")
+
 print("Bài tập phiên âm #1:")
 parse_from_file("input/bai_1.txt")
 print("==========")
